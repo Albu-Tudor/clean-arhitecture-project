@@ -15,8 +15,8 @@ namespace GymManagement.Infrastructure
             {
                 options.UseSqlServer("Server=localhost;Database=GymManagement; Trusted_Connection=true;TrustServerCertificate=true;");
             });
-
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<GymManagementDbContext>());
 
             return services;
         }
