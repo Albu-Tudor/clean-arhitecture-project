@@ -7,5 +7,5 @@ using MediatR;
 namespace GymManagement.Application.Subscriptions.Queries.GetSubscription
 {
     public record GetSubscriptionQuery(
-        Guid subscriptionId) : IRequest<ErrorOr<Subscription>>;
+        Guid SubscriptionId) : IRequest<ErrorOr<Subscription>>;
 }

@@ -18,7 +18,7 @@ namespace GymManagement.Application.Subscriptions.Queries.GetSubscription
 
         public async Task<ErrorOr<Subscription>> Handle(GetSubscriptionQuery request, CancellationToken cancellationToken)
         {
-            var subscription = await _subscriptionRepository.GetSubscriptionAsync(request.subscriptionId);
+            var subscription = await _subscriptionRepository.GetSubscriptionAsync(request.SubscriptionId);
 
             return subscription is null 
                 ? Error.NotFound(description: "Subscription not found")
