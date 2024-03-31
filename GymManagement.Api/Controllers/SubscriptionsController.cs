@@ -49,10 +49,10 @@ namespace GymManagement.Api.Controllers
                 error => Problem());
         }
 
-        [HttpGet("{subcrtiptionId}")]
-        public async Task<IActionResult> Get([FromRoute] Guid subcrtiptionId)
+        [HttpGet("{subscriptionId}")]
+        public async Task<IActionResult> Get([FromRoute] Guid subscriptionId)
         {
-            var query = new GetSubscriptionQuery(subcrtiptionId);
+            var query = new GetSubscriptionQuery(subscriptionId);
 
             var getSubscriptionResult = await _mediator.Send(query);
 
