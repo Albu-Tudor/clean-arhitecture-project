@@ -6,6 +6,7 @@ using DomainSubscriptionType = GymManagement.Domain.Subscription.SubscriptionTyp
 using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
+using GymManagement.Application.Subscriptions.Commands.DeleteSubscription;
 
 namespace GymManagement.Api.Controllers
 {
@@ -39,9 +40,13 @@ namespace GymManagement.Api.Controllers
             var createSubscriptionResult = await _mediator.Send(command);
 
             return createSubscriptionResult.MatchFirst(
-                subscription => Ok(new SubscriptionResponse(subscription.Id, request.SubscriptionType)),
-                error => Problem()
-            );
+                subscription => CreatedAtAction(
+                    nameof(Get),
+                    new { subscriptionId = subscription.Id },
+                    new SubscriptionResponse(
+                        subscription.Id,
+                        ToDto(subscription.SubscriptionType))),
+                error => Problem());
         }
 
         [HttpGet("{subcrtiptionId}")]
@@ -56,6 +61,29 @@ namespace GymManagement.Api.Controllers
                     subscription.Id, 
                     Enum.Parse<SubscriptionType>(subscription.SubscriptionType.Name))),
                 error => Problem());
+        }
+
+        [HttpDelete("{subscriptionId}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid subscriptionId)
+        {
+            var command = new DeleteSubscriptionCommand(subscriptionId);
+
+            var deleteSubscriptionResult = await _mediator.Send(command);
+
+            return deleteSubscriptionResult.Match<IActionResult>(
+                _ => NoContent(),
+                _ => Problem());
+        }
+
+        private static SubscriptionType ToDto(DomainSubscriptionType subscriptionType)
+        {
+            return subscriptionType.Name switch
+            {
+                nameof(DomainSubscriptionType.Free) => SubscriptionType.Free,
+                nameof(DomainSubscriptionType.Starter) => SubscriptionType.Started,
+                nameof(DomainSubscriptionType.Pro) => SubscriptionType.Pro,
+                _ => throw new InvalidOperationException()
+            };
         }
     }
 }

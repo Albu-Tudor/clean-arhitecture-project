@@ -24,5 +24,12 @@ namespace GymManagement.Infrastructure.Subscriptions.Persistence
 
             return subscription;
         }
+
+        public Task RemoveSubscriptionAsync(Subscription subscription)
+        {
+            _dbContext.Remove(subscription);
+
+            return Task.CompletedTask;
+        }
     }
 }
